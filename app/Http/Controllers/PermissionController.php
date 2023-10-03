@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\CreatePermissionRequest;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
@@ -42,7 +41,7 @@ class PermissionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Permission $permission)
+    public function show(Permission $permission): JsonResponse
     {
         $this->authorize('view-permission');
 
@@ -70,10 +69,11 @@ class PermissionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Permission $permission)
+    public function destroy(Permission $permission): JsonResponse
     {
         $this->authorize('delete-permission');
 
+        // check if the permission is used in any roles, if yes then display user the message to remove permissions to those roles first
         $permission->delete();
 
         return response()->json([], 204);
